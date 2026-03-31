@@ -1,13 +1,10 @@
-import { defineConfig, loadEnv } from 'vite'
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
-export default defineConfig(({ mode }) => {
-  // 读取所有 env（包含非 VITE_ 前缀），仅用于 dev server 侧代理注入鉴权
-  const env = loadEnv(mode, process.cwd(), '')
-  const apiKey = env.VITE_AI_API_KEY || env.AI_API_KEY
-  const baseUrl = env.VITE_AI_BASE_URL || env.AI_BASE_URL || 'https://api.openai.com'
+export default defineConfig(() => {
+
 
   return {
     plugins: [react(), tailwindcss()],

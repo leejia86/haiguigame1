@@ -3,43 +3,7 @@ import { type TStory } from './stories'
 // 为了满足外部函数签名约定，这里暴露一个 `Story` 名称。
 export type Story = TStory
 
-type TOpenAIChatCompletionResponse = {
-  choices?: Array<{
-    message?: {
-      content?: string
-    }
-  }>
-}
 
-const SYSTEM_PROMPT_TEMPLATE = `你是一个海龟汤游戏的专业主持人。
-当前故事的汤面是：{surface}
-故事的汤底是：{bottom}
-
-玩家会向你提问，你**只能**返回以下三种答案之一，禁止添加任何额外文字、解释、标点：
-1. 是：玩家的猜测与汤底完全一致
-2. 否：玩家的猜测与汤底矛盾
-3. 无关：玩家的猜测与汤底无关，无法判断
-
-为帮助你稳定输出，这里有示例（注意：你的输出必须始终只是一行中的“是/否/无关”之一，不能带任何标点或解释）：
-示例 1：
-汤底（示意）：A
-问题：玩家的猜测是否等于 A？
-是
-示例 2：
-汤底（示意）：A
-问题：玩家的猜测是否等于 B（与 A 矛盾）？
-否
-示例 3：
-汤底（示意）：A
-问题：玩家的猜测是否与汤底没有任何关系？
-无关
-
-严格规则：
-1. 必须严格按照汤底判断，不自主推理、不延伸信息
-2. 仅返回「是」「否」「无关」三个字中的一个
-3. 绝对不泄露汤底内容，保持游戏神秘感`
-
-const AI_MODEL = (import.meta.env.VITE_AI_MODEL as string | undefined) ?? 'gpt-4o-mini'
 
 function normalizeAnswer(text: string): string | null {
   // 严格合规：只有当最终内容“等于”三值之一（允许首尾少量引号/括号/空白/句号）才算合规。
@@ -59,10 +23,6 @@ function normalizeAnswer(text: string): string | null {
   if (s === '否') return '否'
   if (s === '无关') return '无关'
   return null
-}
-
-function buildSystemPrompt(story: Story): string {
-  return SYSTEM_PROMPT_TEMPLATE.replace('{surface}', story.surface).replace('{bottom}', story.bottom)
 }
 
 function withRetries<T>(fn: () => Promise<T>, maxRetries: number): Promise<T> {

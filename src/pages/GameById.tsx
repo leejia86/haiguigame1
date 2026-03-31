@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import ChatBox from '../components/ChatBox'
 import { type TMessage } from '../components/Message'
 import { askAI } from '../api'
-import { stories, type TStory } from '../stories'
+import { stories } from '../stories'
 
 export default function GameById() {
   const { id } = useParams<{ id: string }>()
